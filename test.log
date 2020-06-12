@@ -1,0 +1,15 @@
+DEBUG:root:Error:The read operation timed out
+DEBUG:root:Error:1264 (22003): Out of range value for column 'PlotArea' at row 2947
+DEBUG:root:Error:1264 (22003): Out of range value for column 'Price' at row 12255
+DEBUG:root:Error:2055: Lost connection to MySQL server at 'localhost:3306', system error: 10053 An established connection was aborted by the software in your host machine
+DEBUG:root:Error:[WinError 10054] An existing connection was forcibly closed by the remote host
+DEBUG:root:Error:append() takes exactly one argument (0 given)
+DEBUG:root:Error:list index out of range
+DEBUG:root:Error:list index out of range
+DEBUG:root:Error:list index out of range
+DEBUG:root:Error:list index out of range
+DEBUG:root:Error:list index out of range
+DEBUG:root:Error:list index out of range
+DEBUG:root:Error:Failed processing format-parameters; Python 'list' cannot be converted to a MySQL type
+DEBUG:root:Error:Failed processing format-parameters; Python 'list' cannot be converted to a MySQL type
+DEBUG:root:Error:1146 (42S02): Table 'ingatlan.arvaltozas' doesn't exist
