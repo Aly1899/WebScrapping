@@ -13,3 +13,6 @@ DEBUG:root:Error:list index out of range
 DEBUG:root:Error:Failed processing format-parameters; Python 'list' cannot be converted to a MySQL type
 DEBUG:root:Error:Failed processing format-parameters; Python 'list' cannot be converted to a MySQL type
 DEBUG:root:Error:1146 (42S02): Table 'ingatlan.arvaltozas' doesn't exist
+DEBUG:root:Error:('The SQL contains 0 parameter markers, but 5 parameters were supplied', 'HY000')
+DEBUG:root:Error:('The SQL contains 0 parameter markers, but 26 parameters were supplied', 'HY000')
+DEBUG:root:Error:2055: Lost connection to MySQL server at 'localhost:3306', system error: 10053 An established connection was aborted by the software in your host machine

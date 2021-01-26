@@ -9,6 +9,7 @@ import mysql.connector
 from mysql.connector import Error
 from datetime import datetime
 import pytz
+import pyodbc
 import logging
 import sys
 from decimal import Decimal
@@ -63,18 +64,33 @@ def openConnection():
   """ Connect to MySQL database """
   # conn = None
   global conn
-  conn = mysql.connector.connect(host='localhost',
-                                  database='ingatlan',
-                                  user='root',
-                                  password='password',
-                                  auth_plugin='mysql_native_password')
-  if conn.is_connected():
-    print('Connected to MySQL database')
+  # conn = mysql.connector.connect(host='localhost',
+  #                                 database='ingatlan',
+  #                                 user='root',
+  #                                 password='password',
+  #                                 auth_plugin='mysql_native_password')
+
+# Server=localhost\SQLEXPRESS;Database=master;Trusted_Connection=True;
+  server = 'localhost\SQLEXPRESS'
+  database = 'ingatlan'
+  # username = 'alpar'
+  # password = 'QWErtz1899'
+  driver= '{ODBC Driver 17 for SQL Server}'
+  try:
+    # conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';UID='+username+';PWD='+ password)
+    conn = pyodbc.connect('DRIVER='+driver+';SERVER='+server+';PORT=1433;DATABASE='+database+';Trusted_Connection=yes;')
+    conn.cursor()
+    print('Connected to database')
+  except Error as e:
+    print('Database error: '+ e)
 
 def closeConnection():
-  if conn is not None and conn.is_connected():
+  try:
+    conn.cursor()
+    print('Connection close')
     conn.close()
-    print('Connection closed')
+  except:
+    print('Connection already closed')
 
 def queryExecution(query, dataSet):
   logging.basicConfig(filename="test.log", level=logging.DEBUG)
@@ -149,6 +165,7 @@ def getNumberOfPages(adType, place):
 def createAdItem(adItem, adType, page):
   tz = pytz.timezone('Europe/Berlin')
   current_datetime = datetime.now(tz)
+  print(current_datetime)
   try:
     adRecord=(
       adItem['data-id'],
@@ -186,6 +203,7 @@ def createAdCollection(adType, place, existingRecords):
   #   widgets=[progressbar.Bar('=', '[', ']'), ' ', progressbar.Percentage()])
   # bar.start()       
   for page in range(int(nrOfPages)):
+  # for page in range(2):
     # bar.update(page)
     # proxyIndex = randint(0,len(ind)-1)
     # proxyIp = ind[proxyIndex].ip + ':' + ind[proxyIndex].port
@@ -221,8 +239,7 @@ def createAdCollection(adType, place, existingRecords):
       if res == []:
         adRecords[0].append(adRecord)
       elif res[0][2] != Decimal(adRecord[2]) :
-        updateQuery = f'UPDATE hirdetesek SET Price = {adRecord[2]} WHERE adId = {adRecord[0]}'
-        updateRecord(updateQuery)
+        # u  pdateRecord(updateQuery)
         changeRecord = (
           adRecord[0],
           res[0][2],
@@ -256,25 +273,25 @@ def getAllRecordsFromDb():
     openConnection()
     try:
       cursor = conn.cursor()
-      cursor.execute("SELECT * FROM hirdetesek")
+      cursor.execute("SELECT * FROM ingatlan.hirdetesek")
       allRecords = cursor.fetchall()
-      # print(len(allRecords))
+      print(len(allRecords))
       # for x in allRecords:
       #   print (x)
     except Exception as e:
-      print (e)
+      print (f'itt a hiba {e}')
       logging.debug(f'Error:{e}')
   except Error as e:
-    print(e)
+    print(f'itt a hiba conn {e}')
   finally:
     closeConnection()
   return allRecords
 
 def mainProgram():
-  queryNewItem = "INSERT INTO hirdetesek(adID, adType, Price, PricePerSqm, Address, Area,PlotArea, LeaseRights, Balcony, Date) " \
-            "VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-  queryChange = "INSERT INTO arvaltozas(adID, old_price, new_price, Date) " \
-      "VALUES(%s,%s, %s,%s)"
+  queryNewItem = "INSERT INTO ingatlan.hirdetesek(adID, adType, Price, PricePerSqm, Address, Area,PlotArea, LeaseRights, Balcony, Date) " \
+            "VALUES(?,?,?,?,?,?,?,?,?,?)"
+  queryChange = "INSERT INTO ingatlan.arvaltozas(adID, old_price, new_price, Date) " \
+      "VALUES(?,?,?,?)"
   existingRecords = getAllRecordsFromDb()
   # telek = createAdCollection('+telek','', existingRecords)
   telek = createAdCollection(sys.argv[1],sys.argv[2], existingRecords)
@@ -284,6 +301,7 @@ def mainProgram():
   # print('****************')
   # print(telek[1])
   # lakas = createAdCollection('+lakas','+budapest', existingRecords)
+  # lakas = createAdCollection(sys.argv[1],sys.argv[2], existingRecords)
   # queryExecution(queryNewItem,lakas[0])
   # queryExecution(queryChange,lakas[1])
 

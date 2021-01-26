@@ -1,1 +1,1 @@
-C:\Users\Ali\AppData\Local\Programs\Python\Python37-32\pythonw.exe D:\Python\WebScrapping\web-scrapping.py '+telek' '' 1>stderr.txt 2>stdout.txt
+C:\Users\Ali\AppData\Local\Programs\Python\Python37-32\pythonw.exe web-scrapping.py '+telek' '' 1>stderr.txt 2>stdout.txt
